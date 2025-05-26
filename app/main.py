@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
-from app.routes.descriptions import router as descriptions_router
+from app.routes.documents import router as documents_router
 from app.routes.recommendations import router as recommendations_router
 
 app = FastAPI()
