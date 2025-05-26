@@ -20,7 +20,6 @@ def get_documents():
     
     try:
         documents = load_from_db(Config.doc_db_path)
-        logger.debug(f"Retrieved {len(documents)} documents from the database")
         return {"message": "Documents retrieved successfully",
                 "data": documents}
     except FileNotFoundError:
@@ -41,12 +40,8 @@ def add_document(document: Document):
     Returns:
         JSONResponse: A response indicating success or failure.
     """
-
+    
     input_data = document.data
-    logger.debug(f"Adding document: {input_data}")
-    documents = load_from_db(Config.doc_db_path)
-    logger.debug(f"Current number of documents: {len(documents)}")
-
     if not input_data:
         raise HTTPException(status_code=400, 
                             detail="No document data provided")
@@ -56,10 +51,14 @@ def add_document(document: Document):
     if input_data in documents.values():
         raise HTTPException(status_code=400, 
                             detail="Document already exists")
-    
-    
+    # Load existing documents from the database
+    documents = load_from_db(Config.doc_db_path)
+    if not documents:
+            logger.warning("No documents found in the database.")
+            raise HTTPException(status_code=500, detail="Document database is empty")
+
+    # Add the new document to the existing documents
     documents[f"doc{str(len(documents) + 1)}"] = input_data
-    logger.debug(f"New number of documents: {len(documents)}")
     
     save_to_db(Config.doc_db_path, documents)
     logger.debug("Document added successfully")
