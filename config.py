@@ -10,7 +10,7 @@ class Config:
     vectorizer_path: str = "app/db/vectorizer.pickle"
 
 @dataclass(frozen=True)
-class Recommender:
+class KNN:
     """ 
     recommender config
     """
