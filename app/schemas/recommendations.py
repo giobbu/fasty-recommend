@@ -5,4 +5,4 @@ class RecommendationRequest(BaseModel):
 
 class RecommendationResponse(BaseModel):
     message: str
-    data: list
+    data: dict
