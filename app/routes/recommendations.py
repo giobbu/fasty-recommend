@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from config import Config, KNN
-from app.helpers.file_operations import load_from_db
+from app.helpers.db import load_from_db
 from recommender import Recommender
 from app.schemas.recommendations import RecommendationRequest, RecommendationResponse
 from loguru import logger
