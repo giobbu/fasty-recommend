@@ -1,23 +1,26 @@
-from fastapi import APIRouter, HTTPException
-from loguru import logger
+from fastapi import APIRouter, HTTPException, Depends
+from typing import Annotated
 from app.helpers.file_operations import load_from_db, save_to_db
-from config import Config, KNN
-from recommender import Recommender
+from config import Config
 from app.schemas.documents import Document, AllDocuments
+from app.helpers.login import get_current_active_user
+from app.schemas.login import User
+from loguru import logger
+from recommender import Recommender
+from config import KNN
 
 
 router = APIRouter()
 
 
 @router.get("/all_documents", response_model=AllDocuments)
-def get_documents():
+def get_documents(current_user: User = Depends(get_current_active_user)):
     """
     Retrieve all documents from the database.
     
     Returns:
         JSONResponse: A response containing all documents.
     """
-    
     try:
         documents = load_from_db(Config.doc_db_path)
         return {"message": "Documents retrieved successfully",
@@ -25,8 +28,6 @@ def get_documents():
     except FileNotFoundError:
         raise HTTPException(status_code=404, 
                             detail="Document database not found")
-
-
 
 
 @router.post("/add_document")
