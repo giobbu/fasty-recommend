@@ -9,6 +9,7 @@ from passlib.context import CryptContext
 from app.schemas.login import UserInDB, TokenData, User
 from app.db.user import fake_users_db
 from loguru import logger
+from config import Config
 
 import os 
 from dotenv import load_dotenv
@@ -18,7 +19,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=Config.PREFIX)
 
 def verify_password(plain_password, hashed_password):
     " Verify a plain password against a hashed password."
